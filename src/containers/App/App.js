@@ -5,6 +5,9 @@ import { connect, Provider } from 'react-redux'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import store from '../../store/index'
+import { Route } from 'react-router'
+import { BrowserRouter as Router } from 'react-router-dom'
+import Profile from '../../pages/Profile'
 
 const Nav = () => (
   <nav className="flex items-center">
@@ -35,7 +38,8 @@ const App = () => {
       <Nav />
       <ToastContainer />
       <div className="p-4 flex-1 flex flex-col">
-        <RequestForm />
+        <Route path="/" exact component={RequestForm} />
+        <Route path="/profile" exact component={Profile} />
       </div>
     </div>
   )
@@ -52,7 +56,9 @@ const Connected = connect(
 
 const Wrapped = () => (
   <Provider store={store}>
-    <Connected />
+    <Router>
+      <Connected />
+    </Router>
   </Provider>
 )
 
