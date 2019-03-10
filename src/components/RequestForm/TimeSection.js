@@ -1,5 +1,4 @@
 import React from 'react'
-import { ReactComponent as Wait } from '../..//media/undraw_subway_7vh7.svg'
 import Section from './Section'
 
 const Input = ({ title, value, onChange, type = 'text', ...props } = {}) => (

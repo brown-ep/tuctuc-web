@@ -1,6 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import './App.css'
-import RequestForm from './components/RequestForm/RequestForm'
+import RequestForm from '../../components/RequestForm/RequestForm'
+import { connect, Provider } from 'react-redux'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import store from '../../store/index'
 
 const Nav = () => (
   <nav className="flex items-center">
@@ -25,9 +29,11 @@ const Nav = () => (
 )
 
 const App = () => {
+  useEffect(() => {}, [])
   return (
     <div className="bg-white min-h-full relative flex flex-col">
       <Nav />
+      <ToastContainer />
       <div className="p-4 flex-1 flex flex-col">
         <RequestForm />
       </div>
@@ -35,4 +41,19 @@ const App = () => {
   )
 }
 
-export default App
+const mapDispatch = dispatch => ({
+  listen: dispatch.auth.listen,
+})
+
+const Connected = connect(
+  () => ({}),
+  mapDispatch
+)(App)
+
+const Wrapped = () => (
+  <Provider store={store}>
+    <Connected />
+  </Provider>
+)
+
+export default Wrapped

@@ -10,7 +10,7 @@ const steps = {
   direction: DirectionSection,
   airport: AirportSection,
   times: TimeSection,
-  prefs: PrefsSection,
+  phone: PrefsSection,
 }
 
 const useSteps = initial => {
@@ -37,12 +37,12 @@ const RequestForm = () => {
     direction: '',
     airport: '',
     times: '',
-    prefs: '',
+    phone: '',
   })
 
   const sign = n => (n >= 0 ? '' : '-')
 
-  const [step, next, back] = useSteps('direction')
+  const [step, next, back] = useSteps('airport')
   const transitions = useTransition(step, step.name, {
     from: {
       transform: `translate3d(${sign(step.dir)}30%,0,0)`,
@@ -63,18 +63,25 @@ const RequestForm = () => {
 
   const nextStep = () => {
     switch (step.name) {
-      case 'direction':
-        next('airport')
-        break
       case 'airport':
+        next('direction')
+        break
+      case 'direction':
         next('times')
         break
       case 'times':
-        next('prefs')
+        next('phone')
         break
+      case 'phone':
+        return true
       default:
-        return
+        break
     }
+    return false
+  }
+
+  const submit = () => {
+    console.log(form)
   }
 
   return (
@@ -92,11 +99,17 @@ const RequestForm = () => {
             <CurrentStep
               value={form[step.name]}
               rootState={form}
-              onChange={val => {
-                if (!form[step.name] || form[step.name] === '') nextStep()
+              key={key}
+              onChange={(val, next = true) => {
+                if ((next && !form[step.name]) || form[step.name] === '')
+                  nextStep()
                 setForm({ ...form, [step.name]: val })
               }}
-              done={nextStep}
+              done={() => {
+                if (nextStep()) {
+                  submit()
+                }
+              }}
               back={back}
             />
           </animated.div>

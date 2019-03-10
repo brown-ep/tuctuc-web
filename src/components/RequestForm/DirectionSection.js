@@ -1,5 +1,4 @@
 import React from 'react'
-import { ReactComponent as Car } from '../..//media/undraw_off_road_9oae.svg'
 import BigButton from './BigButton'
 import Section from './Section'
 
