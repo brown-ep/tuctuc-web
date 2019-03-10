@@ -2,7 +2,7 @@ import React from 'react'
 import BigButton from './BigButton'
 import Section from './Section'
 
-const DirectionSection = ({ value, onChange, done }) => {
+const DirectionSection = ({ value, onChange, back, done }) => {
   const dirs = { in: 'in', out: 'out', round: 'round' }
 
   return (
@@ -40,12 +40,20 @@ const DirectionSection = ({ value, onChange, done }) => {
         </BigButton>
       </div>
 
-      <button
-        className="text-grey-500 px-4 py-2 bg-grey-050 focus:outline-none mt-5"
-        onClick={done}
-      >
-        Next <i className="fas fa-arrow-right opacity-50 ml-2" />
-      </button>
+      <div className="mt-5">
+        <button
+          className="text-grey-500 px-4 py-2 bg-grey-050 focus:outline-none mr-5"
+          onClick={back}
+        >
+          <i className="fas fa-arrow-left opacity-50 ml-2" /> Back
+        </button>
+        <button
+          className="text-grey-500 px-4 py-2 bg-grey-050 focus:outline-none"
+          onClick={done}
+        >
+          Next <i className="fas fa-arrow-right opacity-50 ml-2" />
+        </button>
+      </div>
     </Section>
   )
 }

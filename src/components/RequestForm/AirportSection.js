@@ -21,12 +21,12 @@ const AirportSection = ({ value, onChange, done, back }) => {
         </BigButton>
       </div>
       <div className="mt-5">
-        <button
+        {/* <button
           className="text-grey-500 px-4 py-2 bg-grey-050 focus:outline-none mr-5"
           onClick={back}
         >
           <i className="fas fa-arrow-left opacity-50 ml-2" /> Back
-        </button>
+        </button> */}
         <button
           className="text-grey-500 px-4 py-2 bg-grey-050 focus:outline-none"
           onClick={done}
