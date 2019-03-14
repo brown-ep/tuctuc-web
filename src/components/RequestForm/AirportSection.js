@@ -4,19 +4,13 @@ import Section from './Section'
 
 const AirportSection = ({ value, onChange, done, back }) => {
   return (
-    <Section title="What airport are you going to?">
+    <Section key="airport" title="What airport are you going to?">
       {/* <Plane height={250} width={250} /> */}
       <div className="flex justify-center flex-wrap">
-        <BigButton
-          onClick={() => onChange('green')}
-          selected={value === 'green'}
-        >
+        <BigButton onClick={() => onChange('PVD')} selected={value === 'PVD'}>
           TF Green (PVD)
         </BigButton>
-        <BigButton
-          onClick={() => onChange('logan')}
-          selected={value === 'logan'}
-        >
+        <BigButton onClick={() => onChange('BOS')} selected={value === 'BOS'}>
           Boston Logan (BOS)
         </BigButton>
       </div>

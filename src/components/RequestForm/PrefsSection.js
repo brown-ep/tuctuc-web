@@ -25,7 +25,7 @@ const PhoneSection = ({ value, onChange, done, back, rootState }) => {
   const submitPhone = () => {
     firebase
       .auth()
-      .signInWithPhoneNumber(`+1${value}`, cap)
+      .signInWithPhoneNumber(`+1${value.phone}`, cap)
       .then(function(confirmationResult) {
         // SMS sent. Prompt user to type the code from the message, then sign the
         // user in with confirmationResult.confirm(code).
@@ -45,7 +45,11 @@ const PhoneSection = ({ value, onChange, done, back, rootState }) => {
   const confirm = () => {
     window.confirmationResult
       .confirm(code)
-      .then(done)
+      .then(result => {
+        const user = result.user
+        onChange({ ...value, uid: user.uid })
+        done()
+      })
       .catch(() => toast.error('Error confirming'))
   }
 
@@ -55,12 +59,19 @@ const PhoneSection = ({ value, onChange, done, back, rootState }) => {
         <div key="number">
           <div className="block ">
             <Input
+              title="Name"
+              type="text"
+              className="text-2xl"
+              value={value.name}
+              onChange={name => onChange({ ...value, name })}
+            />
+            <Input
               title="Phone Number"
               placeholder="Excluding country code"
               type="phone"
               className="text-2xl"
-              value={value}
-              onChange={onChange}
+              value={value.phone}
+              onChange={phone => onChange({ ...value, phone })}
             />
             <div id="recaptcha-container" />
           </div>

@@ -6,6 +6,9 @@ import AirportSection from './AirportSection'
 import TimeSection from './TimeSection'
 import PrefsSection from './PrefsSection'
 
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+
 const steps = {
   direction: DirectionSection,
   airport: AirportSection,
@@ -36,8 +39,15 @@ const RequestForm = () => {
   const [form, setForm] = useState({
     direction: '',
     airport: '',
-    times: '',
-    phone: '',
+    times: {
+      outbound: { earliest: new Date(), latest: new Date() },
+      inbound: { earliest: new Date(), latest: new Date() },
+    },
+    phone: {
+      phone: '',
+      name: '',
+      uid: '',
+    },
   })
 
   const sign = n => (n >= 0 ? '' : '-')
@@ -80,8 +90,46 @@ const RequestForm = () => {
     return false
   }
 
-  const submit = () => {
+  const toFBDoc = dir => {
+    const dirKey = dir === 'in' ? 'inbound' : 'outbound'
     console.log(form)
+    return {
+      phone: form.phone.phone,
+      name: form.phone.name,
+      uid: form.phone.uid,
+      to: dir === 'in' ? 'BROWN' : form.airport,
+      from: dir === 'in' ? form.airport : 'BROWN',
+      earliest: form.times[dirKey].earliest,
+      latest: form.times[dirKey].latest,
+    }
+  }
+
+  const submit = async () => {
+    const promises = []
+    if (form.direction === 'round' || form.direction === 'in') {
+      const body = toFBDoc('in')
+      console.log(body)
+      promises.push(
+        firebase
+          .firestore()
+          .collection('trips')
+          .add(body)
+      )
+    }
+
+    if (form.direction === 'round' || form.direction === 'out') {
+      const body = toFBDoc('in')
+      console.log(body)
+      promises.push(
+        firebase
+          .firestore()
+          .collection('trips')
+          .add(body)
+      )
+    }
+
+    const docs = await Promise.all(promises)
+    console.log(docs)
   }
 
   return (

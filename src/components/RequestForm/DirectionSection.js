@@ -6,7 +6,7 @@ const DirectionSection = ({ value, onChange, back, done }) => {
   const dirs = { in: 'in', out: 'out', round: 'round' }
 
   return (
-    <Section title="Where are you going?">
+    <Section key="dir" title="Where are you going?">
       {/* <Car height={250} width={250} /> */}
       <div className="flex justify-center flex-wrap">
         <BigButton

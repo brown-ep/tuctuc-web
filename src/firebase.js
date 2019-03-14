@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import 'firebase/firestore'
 
 var config = {
   apiKey: 'AIzaSyCcWX1BKoSyERLU-7GIzAB6GuOx2_ZCFFI',
@@ -13,3 +14,5 @@ var config = {
 firebase.initializeApp(config)
 firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 firebase.auth().useDeviceLanguage()
+
+firebase.firestore()
