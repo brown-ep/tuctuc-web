@@ -8,6 +8,7 @@ import store from '../../store/index'
 import { Route } from 'react-router'
 import { BrowserRouter as Router } from 'react-router-dom'
 import Profile from '../../pages/Profile'
+import Results from '../../pages/Results'
 
 const Nav = () => (
   <nav className="flex items-center">
@@ -40,6 +41,7 @@ const App = () => {
       <div className="p-4 flex-1 flex flex-col">
         <Route path="/" exact component={RequestForm} />
         <Route path="/profile" exact component={Profile} />
+        <Route path="/results" exact component={Results} />
       </div>
     </div>
   )
