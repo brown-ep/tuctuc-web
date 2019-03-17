@@ -78,8 +78,6 @@ const Results = ({ loadMatches, uid, deleteTrip }) => {
     return opts[key]
   }
 
-  const date = d => moment(d.toDate()).format('MMMM Do YYYY [at] h:mm a')
-
   const Date = ({ earliest, latest }) => {
     const start = earliest.toDate()
     const end = latest.toDate()

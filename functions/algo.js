@@ -53,6 +53,10 @@ function momentMin(moment1, moment2) {
   return moment1.isBefore(moment2) ? moment1 : moment2
 }
 
+const inGroup = (trip, group) => {
+  return group.trips.some(t => t.phone === trip.phone)
+}
+
 function makeMatches(trips) {
   // makes matches on a collection of trips, assuming all given trips are of the same type
   let groups = []
@@ -61,7 +65,11 @@ function makeMatches(trips) {
     let trip = trips[t]
     for (let g = 0; g < groups.length; g++) {
       let group = groups[g]
-      if (momentOverlaps(trip, group) && group.size < MAX_GROUP_SIZE) {
+      if (
+        momentOverlaps(trip, group) &&
+        group.size < MAX_GROUP_SIZE &&
+        !inGroup(trip, group)
+      ) {
         foundAGroup = true // mark that a group was found for this trip
         // add trip to group
         group.trips.push(trip)

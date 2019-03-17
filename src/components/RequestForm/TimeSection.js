@@ -155,7 +155,7 @@ const TripFields = ({ direction, onChange, value }) => {
               onChange(
                 {
                   ...value,
-                  [direction]: { ...value.outbound, latest },
+                  [direction]: { ...value[direction], latest },
                 },
                 false
               )
@@ -180,16 +180,16 @@ const TimeSection = ({ value, onChange, done, back, rootState }) => {
       <div className="flex justify-center flex-wrap -m-4">
         {value && value.inbound && value.outbound && (
           <>
-            {rootState.direction !== 'out' && (
+            {rootState.direction !== 'in' && (
               <TripFields
-                direction="inbound"
+                direction="outbound"
                 onChange={onChange}
                 value={value}
               />
             )}
-            {rootState.direction !== 'in' && (
+            {rootState.direction !== 'out' && (
               <TripFields
-                direction="outbound"
+                direction="inbound"
                 onChange={onChange}
                 value={value}
               />
