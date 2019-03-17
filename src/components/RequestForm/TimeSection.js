@@ -79,7 +79,7 @@ const DateTimeInput = ({ title, value, onChange, ...props } = {}) => {
   )
 }
 
-const TimeSection = ({ value, onChange, done, back, rootState }) => {
+const TripFields = ({ direction, onChange, value }) => {
   const isDateSupported = useMemo(() => {
     const input = document.createElement('input')
     const value = 'a'
@@ -88,13 +88,7 @@ const TimeSection = ({ value, onChange, done, back, rootState }) => {
     return input.value !== value
   })
 
-  const titles = {
-    in: 'When does your flight land?',
-    out: 'When do you have to arrive by?',
-    round: 'What are your time constraints?',
-  }
-
-  const TripFields = ({ direction }) => (
+  return (
     <section className="outbound mx-4">
       <h2 className="mb-6 text-lg text-grey-700 capitalize">
         {direction} Flight{' '}
@@ -171,6 +165,14 @@ const TimeSection = ({ value, onChange, done, back, rootState }) => {
       )}
     </section>
   )
+}
+
+const TimeSection = ({ value, onChange, done, back, rootState }) => {
+  const titles = {
+    in: 'When does your flight land?',
+    out: 'When do you have to arrive by?',
+    round: 'What are your time constraints?',
+  }
 
   return (
     <Section key="times" title={titles[rootState.direction]}>
@@ -178,11 +180,19 @@ const TimeSection = ({ value, onChange, done, back, rootState }) => {
       <div className="flex justify-center flex-wrap -m-4">
         {value && value.inbound && value.outbound && (
           <>
-            {!(rootState.direction === 'in') && (
-              <TripFields direction="inbound" />
+            {rootState.direction === 'out' && (
+              <TripFields
+                direction="outbound"
+                onChange={onChange}
+                value={value}
+              />
             )}
-            {!(rootState.direction === 'out') && (
-              <TripFields direction="outbound" />
+            {rootState.direction === 'in' && (
+              <TripFields
+                direction="inbound"
+                onChange={onChange}
+                value={value}
+              />
             )}
           </>
         )}
