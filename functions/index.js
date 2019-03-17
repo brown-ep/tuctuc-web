@@ -28,22 +28,24 @@ exports.algo = functions.firestore
 
     qs.forEach(doc => {
       trips.push({ id: doc.id, ...doc.data() })
-      // if (!byUser[doc.data().uid]) {
-      //   byUserTrips[doc.data().uid] = { trips: [doc.ref], matches: [] }
-      // } else {
-      //   byUser[doc.data().uid].trips.push(doc.ref)
-      // }
+      if (!byUser[doc.data().uid]) byUser[doc.data().uid] = { trips: [] }
+      byUser[doc.data().uid].trips.push(doc.ref)
     })
 
     const matchesQ = await db.collection('matches').get()
     matchesQ.forEach(doc => batch.delete(doc.ref))
+
+    const userQ = await db.collection('users').get()
+    userQ.forEach(doc => batch.delete(doc.ref))
 
     const matches = match(trips)
     matches.forEach(match => {
       const ref = db.collection('matches').doc()
       match.trips.forEach(({ uid, id, phone }) => {
         if (!byUser[uid]) byUser[uid] = { trips: [], matches: [], phone }
-        byUser[uid].trips.push(db.collection('trips').doc(id))
+        if (!byUser[uid].phone) byUser[uid].phone = phone
+        if (!byUser[uid].matches) byUser[uid].matches = []
+
         byUser[uid].matches.push(ref)
       })
 

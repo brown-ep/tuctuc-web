@@ -27,12 +27,13 @@ export default {
       const unsub = firebase.auth().onAuthStateChanged(user => {
         if (!user) dispatch.auth.RESET_AUTH()
         else {
+          console.log(user)
           user
             .getIdToken()
             .then(idToken => {
               dispatch.auth.SET_USER({
                 email: user.email,
-                phone: user.phone,
+                phone: user.phoneNumber.replace('+1', ''),
                 uid: user.uid,
                 idToken,
               })
@@ -60,6 +61,13 @@ export default {
       // matches.forEach(doc => all.push({ id: doc.id, ...doc.data() }))
       // return all
     },
+
+    deleteTrip: async (id, rootState) =>
+      firebase
+        .firestore()
+        .collection('trips')
+        .doc(id)
+        .delete(),
 
     logout: () =>
       firebase

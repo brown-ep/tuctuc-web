@@ -6,21 +6,33 @@ import { Input } from '../Form'
 import { toast } from 'react-toastify'
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import { connect } from 'react-redux'
 
-const PhoneSection = ({ value, onChange, done, back, rootState }) => {
+const PhoneSection = ({
+  authenticated,
+  user,
+  value,
+  onChange,
+  done,
+  back,
+  rootState,
+}) => {
   const [step, setStep] = useState(0)
   const [cap, setCap] = useState(null)
   const [id, setId] = useState(null)
   const [code, setCode] = useState('')
 
-  useLayoutEffect(() => {
-    const recap = (window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-      'recaptcha-container'
-    ))
+  const [loading, setLoading] = useState(false)
 
-    recap.render().then(setId)
-    setCap(recap)
-  }, [])
+  useLayoutEffect(() => {
+    if (!authenticated) {
+      const recap = (window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+        'recaptcha-container'
+      ))
+      recap.render().then(setId)
+      setCap(recap)
+    }
+  }, [authenticated])
 
   const submitPhone = () => {
     firebase
@@ -46,9 +58,11 @@ const PhoneSection = ({ value, onChange, done, back, rootState }) => {
     if (!!value.uid) {
       done()
     }
+    setLoading(false)
   }, [value.uid])
 
   const confirm = () => {
+    setLoading(true)
     window.confirmationResult
       .confirm(code)
       .then(result => {
@@ -57,7 +71,44 @@ const PhoneSection = ({ value, onChange, done, back, rootState }) => {
         onChange({ ...value, uid: user.uid })
       })
       .catch(() => toast.error('Error confirming'))
+      .finally(setLoading(false))
   }
+
+  if (authenticated)
+    return (
+      <Section key="phone" title="Finish and get matched">
+        <div key="number">
+          <div className="block ">
+            <Input
+              title="Name"
+              type="text"
+              className="text-2xl"
+              value={value.name}
+              onChange={name => onChange({ ...value, name })}
+            />
+          </div>
+          <div className="mt-10">
+            <button
+              className="text-grey-500 px-4 py-2 bg-grey-050 focus:outline-none mr-5"
+              onClick={back}
+            >
+              <i className="fas fa-arrow-left opacity-50 ml-2" /> Back
+            </button>
+            <button
+              id="sign-in-button"
+              disabled={loading}
+              className="text-white font-bold rounded-sm px-4 py-2 bg-orange-500 focus:outline-none"
+              onClick={() => {
+                setLoading(true)
+                onChange({ phone: user.phone, uid: user.uid, name: value.name })
+              }}
+            >
+              Get Matches
+            </button>
+          </div>
+        </div>
+      </Section>
+    )
 
   return (
     <Section key="phone" title="Sign in to get your match">
@@ -140,4 +191,7 @@ const PhoneSection = ({ value, onChange, done, back, rootState }) => {
   )
 }
 
-export default PhoneSection
+export default connect(state => ({
+  authenticated: state.auth.authenticated,
+  user: state.auth.user,
+}))(PhoneSection)
