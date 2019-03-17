@@ -169,8 +169,8 @@ const TripFields = ({ direction, onChange, value }) => {
 
 const TimeSection = ({ value, onChange, done, back, rootState }) => {
   const titles = {
-    in: 'When does your flight land?',
-    out: 'When do you have to arrive by?',
+    in: 'When can you leave the airport?',
+    out: 'When do you have to leave by??',
     round: 'What are your time constraints?',
   }
 

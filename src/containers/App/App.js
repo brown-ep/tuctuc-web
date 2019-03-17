@@ -22,26 +22,26 @@ import Redirect from 'react-router/Redirect'
 const persistor = getPersistor()
 
 const Nav = ({ authenticated, logout }) => (
-  <nav className="flex items-center">
-    <div className="bg-orange-500 flex-no-shrink w-32 h-32 flex items-center justify-center text-orange-050 text-5xl font-black uppercase mr-6 overflow-hidden">
+  <nav className="flex sm:items-center items-start">
+    <div className="bg-orange-500 flex-no-shrink w-24 h-24 sm:w-32 sm:h-32 flex items-center justify-center text-orange-050 sm:text-5xl text-2xl font-black uppercase mr-6 overflow-hidden">
       Tuc
       <br />
       Tuc
     </div>
-    <div className="px-4 w-full flex justify-between flex-wrap">
+    <div className="sm:px-4 py-4 w-full flex justify-between flex-wrap">
       <section>
-        <p className="text-xl font-bold text-grey-600">
+        <p className="text-base sm:text-xl font-bold text-grey-600">
           Save{' '}
           <span role="img" aria-label="money" className="-ml-1">
             💰
           </span>
           to and from the airport carpooling with Brown & RISD students
         </p>
-        <p className="text-grey-300 mt-2 uppercase tracking-wide font-bold text-sm">
+        <p className="text-grey-300 mt-2 uppercase tracking-wide font-bold text-xs sm:text-sm leading-tight">
           Sign up and get a match within 48 hours of your trip
         </p>
       </section>
-      <section className="text-right">
+      <section className="text-right my-3">
         <Link to="/results" className="mr-4 no-underline text-orange-600">
           See Matches
         </Link>
