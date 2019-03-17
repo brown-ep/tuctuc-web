@@ -80,13 +80,13 @@ const DateTimeInput = ({ title, value, onChange, ...props } = {}) => {
 }
 
 const TripFields = ({ direction, onChange, value }) => {
-  const isDateSupported = () => {
+  const isDateSupported = useMemo(() => {
     const input = document.createElement('input')
     const value = 'a'
     input.setAttribute('type', 'datetime-local')
     input.setAttribute('value', value)
     return input.value !== value
-  }
+  })
 
   return (
     <section className="outbound mx-4">
@@ -96,7 +96,7 @@ const TripFields = ({ direction, onChange, value }) => {
           {direction === 'outbound' ? '🛫' : '🛬'}
         </span>
       </h2>
-      {isDateSupported() ? (
+      {isDateSupported ? (
         <>
           <Input
             type="datetime-local"
@@ -180,16 +180,16 @@ const TimeSection = ({ value, onChange, done, back, rootState }) => {
       <div className="flex justify-center flex-wrap -m-4">
         {value && value.inbound && value.outbound && (
           <>
-            {rootState.direction === 'out' && (
+            {rootState.direction !== 'out' && (
               <TripFields
-                direction="outbound"
+                direction="inbound"
                 onChange={onChange}
                 value={value}
               />
             )}
-            {rootState.direction === 'in' && (
+            {rootState.direction !== 'in' && (
               <TripFields
-                direction="inbound"
+                direction="outbound"
                 onChange={onChange}
                 value={value}
               />
