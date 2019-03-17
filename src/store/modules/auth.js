@@ -44,10 +44,27 @@ export default {
       dispatch.auth.SET_UNSUB(unsub)
     },
 
+    getMatches: async (payload, rootState) => {
+      const uid = rootState.auth.user.uid
+      console.log(`getting matches for ${uid}`)
+      const user = await firebase
+        .firestore()
+        .collection('users')
+        .doc(uid)
+        .get()
+
+      if (!user.exists) return []
+      return user.data()
+
+      // const all = []
+      // matches.forEach(doc => all.push({ id: doc.id, ...doc.data() }))
+      // return all
+    },
+
     logout: () =>
       firebase
         .auth()
-        .logout()
+        .signOut()
         .then(() => dispatch.auth.RESET_AUTH()),
   }),
 }

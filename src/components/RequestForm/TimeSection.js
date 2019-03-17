@@ -88,12 +88,6 @@ const TimeSection = ({ value, onChange, done, back, rootState }) => {
     return input.value !== value
   })
 
-  console.log(isDateSupported)
-
-  useEffect(() => {
-    console.log(value)
-  }, [value])
-
   const titles = {
     in: 'When does your flight land?',
     out: 'When do you have to arrive by?',
@@ -105,7 +99,7 @@ const TimeSection = ({ value, onChange, done, back, rootState }) => {
       <h2 className="mb-6 text-lg text-grey-700 capitalize">
         {direction} Flight{' '}
         <span role="img" aria-label="takeoff">
-          🛫
+          {direction === 'outbound' ? '🛫' : '🛬'}
         </span>
       </h2>
       {isDateSupported ? (
@@ -113,29 +107,35 @@ const TimeSection = ({ value, onChange, done, back, rootState }) => {
           <Input
             type="datetime-local"
             title="Earliest you can leave"
-            value={moment(value[direction].earliest).format('YYYY-MM-DDTHH:MM')}
+            value={moment(value[direction].earliest).format('YYYY-MM-DDTHH:mm')}
             onChange={earliest =>
-              onChange({
-                ...value,
-                [direction]: {
-                  ...value[direction],
-                  earliest: new Date(earliest),
+              onChange(
+                {
+                  ...value,
+                  [direction]: {
+                    ...value[direction],
+                    earliest: new Date(earliest),
+                  },
                 },
-              })
+                false
+              )
             }
           />
           <Input
             type="datetime-local"
             title="Latest you can leave"
-            value={moment(value[direction].latest).format('YYYY-MM-DDTHH:MM')}
+            value={moment(value[direction].latest).format('YYYY-MM-DDTHH:mm')}
             onChange={latest =>
-              onChange({
-                ...value,
-                [direction]: {
-                  ...value[direction],
-                  latest: new Date(latest),
+              onChange(
+                {
+                  ...value,
+                  [direction]: {
+                    ...value[direction],
+                    latest: new Date(latest),
+                  },
                 },
-              })
+                false
+              )
             }
           />
         </>
@@ -145,20 +145,26 @@ const TimeSection = ({ value, onChange, done, back, rootState }) => {
             title="Earliest You can Leave"
             value={value[direction].earliest}
             onChange={earliest =>
-              onChange({
-                ...value,
-                [direction]: { ...value[direction], earliest },
-              })
+              onChange(
+                {
+                  ...value,
+                  [direction]: { ...value[direction], earliest },
+                },
+                false
+              )
             }
           />
           <DateTimeInput
             title="Latest You can Leave"
             value={value[direction].latest}
             onChange={latest =>
-              onChange({
-                ...value,
-                [direction]: { ...value.outbound, latest },
-              })
+              onChange(
+                {
+                  ...value,
+                  [direction]: { ...value.outbound, latest },
+                },
+                false
+              )
             }
           />
         </>

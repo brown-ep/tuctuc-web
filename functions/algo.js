@@ -1,35 +1,6 @@
 let moment = require('moment')
 
-//  TEST TRIPS
-let trip1 = {
-  name: 'John',
-  email: 'john@gmail.com',
-  phone: '12345678910',
-  to: 'PVD',
-  from: 'BROWN',
-  earliest: new Date(2019, 3, 23, 9, 30),
-  latest: new Date(2019, 3, 23, 12, 0),
-}
-
-let trip2 = {
-  phone: '12345678910',
-  to: 'BOS',
-  from: 'BROWN',
-  earliest: new Date(2019, 3, 23, 11, 30),
-  latest: new Date(2019, 3, 23, 15, 0),
-}
-
-let trip3 = {
-  phone: '12345678910',
-  to: 'PVD',
-  from: 'BROWN',
-  earliest: new Date(2019, 3, 23, 3, 30),
-  latest: new Date(2019, 3, 23, 16, 0),
-}
-
-let test_trips = [trip1, trip2, trip3]
-
-MAX_GROUP_SIZE = 4
+MAX_GROUP_SIZE = 6
 
 function cleanTrips(trips) {
   // cleans input trips... for now only just reformats date and time to be moment objects
@@ -43,9 +14,9 @@ function organizeTrips(trips) {
   // organizes trips by FROM/TO and DATE
   // takes an array of trips and groups them into a dictionary where each key is "{FROM},{TO},{DATE}"
   // and each value is an array of all trips of that type
-  groupings = {}
+  let groupings = {}
   for (i = 0; i < trips.length; i++) {
-    type =
+    let type =
       trips[i].from +
       ',' +
       trips[i].to +
@@ -84,12 +55,12 @@ function momentMin(moment1, moment2) {
 
 function makeMatches(trips) {
   // makes matches on a collection of trips, assuming all given trips are of the same type
-  groups = []
+  let groups = []
   for (let t = 0; t < trips.length; t++) {
-    foundAGroup = false
-    trip = trips[t]
+    let foundAGroup = false
+    let trip = trips[t]
     for (let g = 0; g < groups.length; g++) {
-      group = groups[g]
+      let group = groups[g]
       if (momentOverlaps(trip, group) && group.size < MAX_GROUP_SIZE) {
         foundAGroup = true // mark that a group was found for this trip
         // add trip to group
@@ -110,6 +81,16 @@ function makeMatches(trips) {
       })
     }
   }
+
+  groups = groups.map(match => {
+    match.earliest = match.earliest.toDate()
+    match.latest = match.latest.toDate()
+    match.from = match.trips[0].from
+    match.to = match.trips[0].to
+    // match.trips = match.trips.map(t => ({ id: t.id, uid: t.uid }))
+    return match
+  })
+  console.log(groups)
   return groups
 }
 
@@ -123,4 +104,5 @@ function makeAllMatches(trips) {
   }
 }
 
-console.log(makeMatches(cleanTrips(test_trips)))
+const match = trips => makeMatches(cleanTrips(trips))
+module.exports = match

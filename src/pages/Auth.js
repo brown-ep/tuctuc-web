@@ -1,17 +1,17 @@
 /* global grecaptcha */
 
 import React, { useState, useLayoutEffect, useEffect } from 'react'
-import Section from './Section'
-import { Input } from '../Form'
+import { Input } from '../components/Form'
 import { toast } from 'react-toastify'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
-const PhoneSection = ({ value, onChange, done, back, rootState }) => {
+const AuthPage = () => {
   const [step, setStep] = useState(0)
   const [cap, setCap] = useState(null)
   const [id, setId] = useState(null)
   const [code, setCode] = useState('')
+  const [phone, setPhone] = useState('')
 
   useLayoutEffect(() => {
     const recap = (window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
@@ -25,7 +25,7 @@ const PhoneSection = ({ value, onChange, done, back, rootState }) => {
   const submitPhone = () => {
     firebase
       .auth()
-      .signInWithPhoneNumber(`+1${value.phone}`, cap)
+      .signInWithPhoneNumber(`+1${phone}`, cap)
       .then(function(confirmationResult) {
         // SMS sent. Prompt user to type the code from the message, then sign the
         // user in with confirmationResult.confirm(code).
@@ -42,52 +42,38 @@ const PhoneSection = ({ value, onChange, done, back, rootState }) => {
       })
   }
 
-  useEffect(() => {
-    if (!!value.uid) {
-      done()
-    }
-  }, [value.uid])
-
   const confirm = () => {
     window.confirmationResult
       .confirm(code)
       .then(result => {
         const user = result.user
         console.log(user)
-        onChange({ ...value, uid: user.uid })
+        console.log('is logged in')
       })
       .catch(() => toast.error('Error confirming'))
   }
 
   return (
-    <Section key="phone" title="Sign in to get your match">
+    <div
+      key="phone"
+      title="Sign in to get your match"
+      className="max-w-sm mx-auto"
+    >
+      <h1 className="mb-10">Login</h1>
       {step === 0 && (
         <div key="number">
           <div className="block ">
-            <Input
-              title="Name"
-              type="text"
-              className="text-2xl"
-              value={value.name}
-              onChange={name => onChange({ ...value, name })}
-            />
             <Input
               title="Phone Number"
               placeholder="Excluding country code"
               type="phone"
               className="text-2xl"
-              value={value.phone}
-              onChange={phone => onChange({ ...value, phone })}
+              value={phone}
+              onChange={setPhone}
             />
             <div id="recaptcha-container" />
           </div>
           <div className="mt-10">
-            <button
-              className="text-grey-500 px-4 py-2 bg-grey-050 focus:outline-none mr-5"
-              onClick={back}
-            >
-              <i className="fas fa-arrow-left opacity-50 ml-2" /> Back
-            </button>
             <button
               id="sign-in-button"
               className="text-white font-bold rounded-sm px-4 py-2 bg-orange-500 focus:outline-none"
@@ -121,23 +107,16 @@ const PhoneSection = ({ value, onChange, done, back, rootState }) => {
           </div>
           <div className="mt-10">
             <button
-              className="text-grey-500 px-4 py-2 bg-grey-050 focus:outline-none mr-5"
-              onClick={back}
-            >
-              <i className="fas fa-arrow-left opacity-50 ml-2" /> Back
-            </button>
-            <button
               className="sign-in-button text-white font-bold rounded-sm px-4 py-2 bg-orange-500 focus:outline-none"
               onClick={confirm}
             >
-              Find my Ride{' '}
-              <i className="fas fa-plane-departure opacity-50 ml-2" />
+              Login to see Matches
             </button>
           </div>
         </div>
       )}
-    </Section>
+    </div>
   )
 }
 
-export default PhoneSection
+export default AuthPage

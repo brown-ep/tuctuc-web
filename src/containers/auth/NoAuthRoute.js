@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 const NoAuthRoute = ({
   component: Component,
   authenticated,
-  redirect = '/',
+  redirect = '/results',
   props: CProps,
   ...rest
 } = {}) => (

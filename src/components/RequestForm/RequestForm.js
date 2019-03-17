@@ -6,8 +6,11 @@ import AirportSection from './AirportSection'
 import TimeSection from './TimeSection'
 import PrefsSection from './PrefsSection'
 
+import moment from 'moment'
+
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import { Redirect } from 'react-router-dom'
 
 const steps = {
   direction: DirectionSection,
@@ -21,6 +24,7 @@ const useSteps = initial => {
   const [history, setHistory] = useState([initial])
 
   const next = to => {
+    if (to === step) return
     setStep({ name: to, dir: 1 })
     setHistory([...history, to])
   }
@@ -36,12 +40,21 @@ const useSteps = initial => {
 }
 
 const RequestForm = () => {
+  const [success, setSuccess] = useState(false)
+
+  const start = moment(new Date())
+  start.set({ minute: 0, second: 0, hour: 12 })
+  const end = moment(start).add('3', 'hours')
+
   const [form, setForm] = useState({
     direction: '',
     airport: '',
     times: {
-      outbound: { earliest: new Date(), latest: new Date() },
-      inbound: { earliest: new Date(), latest: new Date() },
+      outbound: {
+        earliest: start.toDate(),
+        latest: end.toDate(),
+      },
+      inbound: { earliest: start.toDate(), latest: end.toDate() },
     },
     phone: {
       phone: '',
@@ -72,6 +85,7 @@ const RequestForm = () => {
   })
 
   const nextStep = () => {
+    console.log(`getting next for ${step.name}`)
     switch (step.name) {
       case 'airport':
         next('direction')
@@ -83,6 +97,8 @@ const RequestForm = () => {
         next('phone')
         break
       case 'phone':
+        // console.log('submitting')
+        submit()
         return true
       default:
         break
@@ -92,7 +108,6 @@ const RequestForm = () => {
 
   const toFBDoc = dir => {
     const dirKey = dir === 'in' ? 'inbound' : 'outbound'
-    console.log(form)
     return {
       phone: form.phone.phone,
       name: form.phone.name,
@@ -108,6 +123,7 @@ const RequestForm = () => {
     const promises = []
     if (form.direction === 'round' || form.direction === 'in') {
       const body = toFBDoc('in')
+      console.log('INBOUND: ')
       console.log(body)
       promises.push(
         firebase
@@ -118,7 +134,8 @@ const RequestForm = () => {
     }
 
     if (form.direction === 'round' || form.direction === 'out') {
-      const body = toFBDoc('in')
+      const body = toFBDoc('out')
+      console.log('OUTBOUND: ')
       console.log(body)
       promises.push(
         firebase
@@ -130,6 +147,11 @@ const RequestForm = () => {
 
     const docs = await Promise.all(promises)
     console.log(docs)
+    setSuccess(true)
+  }
+
+  if (success) {
+    return <Redirect to="/results" />
   }
 
   return (
@@ -148,14 +170,16 @@ const RequestForm = () => {
               value={form[step.name]}
               rootState={form}
               key={key}
-              onChange={(val, next = true) => {
-                if ((next && !form[step.name]) || form[step.name] === '')
+              onChange={(val, next = false) => {
+                if ((next && !form[step.name]) || form[step.name] === '') {
                   nextStep()
+                }
                 setForm({ ...form, [step.name]: val })
               }}
               done={() => {
+                console.log('done called')
                 if (nextStep()) {
-                  submit()
+                  // submit()
                 }
               }}
               back={back}
