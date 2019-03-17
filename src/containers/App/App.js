@@ -42,14 +42,14 @@ const Nav = ({ authenticated, logout }) => (
         </p>
       </section>
       <section className="text-right">
+        <Link to="/results" className="mr-4 no-underline text-orange-600">
+          See Matches
+        </Link>
+        <Link to="/" className="mr-4 no-underline text-orange-600">
+          Request a Match
+        </Link>
         {authenticated && (
           <>
-            <Link to="/" className="mr-4 no-underline text-orange-600">
-              Request a Match
-            </Link>
-            <Link to="/results" className="mr-4 no-underline text-orange-600">
-              See Matches
-            </Link>
             <a
               href="#logout"
               className="text-grey-500 font-bold no-underline"
