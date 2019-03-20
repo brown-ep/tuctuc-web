@@ -161,7 +161,7 @@ const PhoneSection = ({
             />
             <a
               href="#restart"
-              className="text-orange-400 text-sm block"
+              className="text-orange-400 text-sm block mb-4"
               onClick={e => {
                 e.preventDefault()
                 setStep(0)
@@ -169,6 +169,19 @@ const PhoneSection = ({
             >
               Back to Phone Number
             </a>
+          </div>
+          <div className="max-w-sm mx-auto">
+            <p className="text-sm leading-normal text-grey-500">
+              Please note, TucTuc only provides students with matches. We do not
+              arrange rides for students. Students themselves can reach out to
+              their matches, set a time and place to meet, and pool to their
+              destination. TucTuc is not affiliated with Uber, Lyft, or any
+              other ride service.
+            </p>
+            <p className="text-sm leading-normal text-grey-500">
+              Questions? Email{' '}
+              <a href="mailto:annie_jacob@brown.edu">Annie Jacob</a>
+            </p>
           </div>
           <div className="mt-10">
             <button
